@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khatri x ESP7 — Free Fire Tournament Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0E0B08;
+    --bg-raised: #17120D;
+    --ember: #FF5A1F;
+    --ember-2: #FFB627;
+    --steel: #3A3F47;
+    --steel-light: #565D67;
+    --text: #F2EDE6;
+    --text-dim: #B8AFA4;
+    --line: #2A241D;
+    --success: #4CAF7D;
+    --danger: #E5484D;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(255,90,31,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(255,182,39,0.08), transparent 55%);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    min-height:100vh;
+  }
+  h1,h2,h3, .display{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    letter-spacing:0.01em;
+  }
+  a{color:inherit;}
+  .wrap{max-width: 860px; margin:0 auto; padding: 0 20px;}
+
+  /* ---------- Header / Hero ---------- */
+  header.hero{
+    position:relative;
+    padding: 38px 0 46px;
+    border-bottom: 1px solid var(--line);
+    overflow:hidden;
+  }
+  .hero-clip{
+    position:absolute; inset:0;
+    background: linear-gradient(100deg, rgba(255,90,31,0.10) 0%, transparent 40%);
+    clip-path: polygon(0 0, 62% 0, 48% 100%, 0 100%);
+    pointer-events:none;
+  }
+  .brand-row{
+    display:flex; align-items:center; gap:12px; margin-bottom:26px; position:relative; z-index:1;
+  }
+  .yt-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--bg-raised);
+    border:1px solid var(--line);
+    padding:7px 14px 7px 8px;
+    border-radius:999px;
+    text-decoration:none;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .yt-badge:hover{ border-color: var(--ember); transform: translateY(-1px); }
+  .yt-icon{ width:26px; height:26px; flex-shrink:0; }
+  .yt-badge span{ font-size:14px; font-weight:600; color: var(--text); }
+  .yt-badge small{ display:block; font-size:11px; color: var(--text-dim); font-weight:400; }
+
+  .kicker{
+    font-size:13px; color: var(--ember-2); font-weight:600;
+    letter-spacing:0.04em;
+    margin-bottom: 10px;
+    position:relative; z-index:1;
+  }
+  h1.title{
+    font-size: clamp(38px, 7vw, 64px);
+    line-height: 0.98;
+    color: var(--text);
+    position:relative; z-index:1;
+    max-width: 620px;
+  }
+  h1.title em{
+    font-style:normal;
+    color: var(--ember);
+  }
+  .hero-sub{
+    margin-top:16px; max-width: 480px; color: var(--text-dim); font-size:15.5px;
+    position:relative; z-index:1;
+  }
+
+  .slot-tracker{
+    margin-top:28px;
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    position:relative; z-index:1;
+  }
+  .slot-pill{
+    background: var(--bg-raised); border:1px solid var(--line); border-radius:10px;
+    padding:10px 16px; display:flex; flex-direction:column; gap:2px; min-width:120px;
+  }
+  .slot-pill .num{ font-family:'Rajdhani',sans-serif; font-size:26px; font-weight:700; color:var(--ember-2); }
+  .slot-pill .lbl{ font-size:11.5px; color:var(--text-dim); }
+  .status-open{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:13px; font-weight:600; color: var(--success);
+  }
+  .status-open .dot{ width:7px; height:7px; border-radius:50%; background:var(--success); box-shadow:0 0 0 3px rgba(76,175,125,0.18);}
+  .status-closed .dot{ background: var(--danger); box-shadow:0 0 0 3px rgba(229,72,77,0.18); }
+  .status-closed{ color: var(--danger); }
+
+  /* ---------- Room info banner (public) ---------- */
+  .room-banner{
+    display:none;
+    margin-top:20px;
+    background: var(--bg-raised);
+    border:1px solid var(--ember);
+    border-radius:12px;
+    padding:16px 18px;
+    position:relative; z-index:1;
+  }
+  .room-banner.show{ display:block; }
+  .room-banner h4{ font-size:13px; color: var(--ember-2); letter-spacing:0.04em; margin-bottom:10px; text-transform:uppercase; }
+  .room-banner .room-row{ display:flex; gap:22px; flex-wrap:wrap; }
+  .room-banner .room-item .k{ font-size:11px; color: var(--steel-light); }
+  .room-banner .room-item .v{ font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; color: var(--text); }
+
+  /* ---------- Sections ---------- */
+  section{ padding: 44px 0; border-bottom:1px solid var(--line); }
+  .section-head{ margin-bottom:22px; }
+  .section-head h2{ font-size: 26px; }
+  .section-head p{ color:var(--text-dim); font-size:14px; margin-top:4px; }
+
+  .detail-grid{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+    gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  }
+  .detail-cell{ background: var(--bg-raised); padding:18px 18px; }
+  .detail-cell .lbl{ font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--steel-light); margin-bottom:7px; }
+  .detail-cell .val{ font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:var(--text); }
+  .detail-cell .val.accent{ color: var(--ember); }
+
+  ol.rules{ padding-left: 22px; display:flex; flex-direction:column; gap:11px; }
+  ol.rules li{ font-size:14.5px; color: var(--text-dim); }
+  ol.rules li strong{ color: var(--text); font-weight:600; }
+
+  /* ---------- Form ---------- */
+  form{ display:flex; flex-direction:column; gap:22px; }
+  fieldset{ border:none; display:flex; flex-direction:column; gap:14px; }
+  fieldset legend{
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:16px;
+    color: var(--ember-2); margin-bottom:2px; padding:0;
+  }
+  .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+  @media (max-width: 560px){ .row2{ grid-template-columns: 1fr; } }
+
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:13px; color: var(--text-dim); }
+  .field label .opt{ color: var(--steel-light); font-weight:400; }
+  input[type=text], input[type=tel], input[type=email], select.mode-select{
+    background: var(--bg-raised);
+    border:1px solid var(--line);
+    color: var(--text);
+    padding: 11px 13px;
+    border-radius:8px;
+    font-size:16px;
+    font-family:'Inter',sans-serif;
+    outline:none;
+    transition: border-color .15s ease;
+  }
+  input:focus, select:focus{ border-color: var(--ember); }
+  input:focus-visible{ box-shadow: 0 0 0 3px rgba(255,90,31,0.25); }
+  input::placeholder{ color:#5B554C; }
+  input.err{ border-color: var(--danger); }
+  .error-msg{ font-size:12px; color: var(--danger); min-height:14px; }
+
+  .submit-btn{
+    align-self:flex-start;
+    background: linear-gradient(135deg, var(--ember), #E23F00);
+    color:#fff; border:none; font-family:'Rajdhani',sans-serif;
+    font-weight:700; font-size:17px; letter-spacing:0.02em;
+    padding: 13px 30px; border-radius:8px; cursor:pointer;
+    transition: transform .12s ease, box-shadow .12s ease;
+    box-shadow: 0 6px 20px rgba(255,90,31,0.25);
+  }
+  .submit-btn:hover{ transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,90,31,0.35); }
+  .submit-btn:active{ transform: translateY(0); }
+  .submit-btn:disabled{ opacity:.5; cursor:not-allowed; transform:none; box-shadow:none; }
+
+  .form-note{ font-size:12.5px; color: var(--steel-light); }
+
+  /* ---------- Confirmation ---------- */
+  .confirm-card{
+    display:none;
+    background: var(--bg-raised);
+    border:1px solid var(--success);
+    border-radius:12px;
+    padding:22px 24px;
+    gap:6px; flex-direction:column;
+  }
+  .confirm-card.show{ display:flex; }
+  .confirm-card h3{ color: var(--success); font-size:20px; }
+  .confirm-card .rid{ font-family:'Rajdhani',sans-serif; font-size:15px; color:var(--ember-2); }
+  .confirm-card p{ font-size:13.5px; color: var(--text-dim); }
+
+  /* ---------- Registered teams ---------- */
+  .teams-list{ display:flex; flex-direction:column; gap:0; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .team-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 13px 18px; background: var(--bg-raised);
+    border-bottom:1px solid var(--line);
+    font-size:14px;
+  }
+  .team-row:last-child{ border-bottom:none; }
+  .team-row .idx{ color: var(--steel-light); font-family:'Rajdhani',sans-serif; font-weight:700; width:28px; }
+  .team-row .name{ flex:1; font-weight:600; }
+  .team-row .mode-tag{ font-size:11px; color: var(--ember-2); border:1px solid rgba(255,182,39,0.35); padding:2px 8px; border-radius:999px; margin-right:10px; }
+  .team-row .time{ color: var(--text-dim); font-size:12px; }
+  .empty-state{
+    padding: 30px 18px; text-align:center; color: var(--text-dim); font-size:14px;
+    border:1px dashed var(--line); border-radius:12px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{ padding: 34px 0 50px; text-align:center; }
+  footer p{ color: var(--steel-light); font-size:12.5px; }
+  .footer-yt{
+    display:inline-flex; align-items:center; gap:8px; margin-top:14px;
+    color: var(--ember-2); text-decoration:none; font-weight:600; font-size:14px;
+  }
+  .footer-yt svg{ width:20px; height:20px; }
+  .footer-credit{
+    display:block; margin-top:14px; font-size:11px; color: var(--steel-light);
+    letter-spacing:0.04em;
+  }
+
+  /* Admin trigger — fixed to the very top-right of the screen so it's
+     always visible (even after scrolling), styled as a small pill.
+     44px-tall tap area (Apple's minimum recommended touch target) so
+     it's easy to hit on iPhone too. */
+  .admin-trigger{
+    position:fixed;
+    top:12px; right:12px;
+    display:inline-flex; align-items:center;
+    min-height:44px; padding:0 16px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background: var(--bg-raised);
+    color: var(--text-dim);
+    font-size:13px; font-weight:600;
+    text-decoration:none;
+    -webkit-tap-highlight-color: transparent;
+    cursor:pointer;
+    z-index:999;
+    transition: border-color .15s ease, color .15s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  }
+  .admin-trigger:hover{ border-color: var(--ember); color: var(--text); }
+
+  /* ---------- Special banner ---------- */
+  .special-banner{
+    display:inline-flex; align-items:center; gap:8px;
+    background: linear-gradient(90deg, rgba(255,90,31,0.16), rgba(255,182,39,0.10));
+    border:1px solid rgba(255,182,39,0.35);
+    color: var(--ember-2);
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.06em;
+    padding:7px 14px; border-radius:999px; margin-bottom:14px;
+    position:relative; z-index:1;
+  }
+
+  /* ============================================================
+     ADMIN PORTAL
+     ============================================================ */
+  #adminPortal{ display:none; }
+  #adminPortal.show{ display:block; }
+
+  .admin-shell{
+    min-height:100vh; padding: 40px 20px 60px;
+  }
+  .admin-wrap{ max-width: 980px; margin:0 auto; }
+
+  .admin-topbar{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
+    margin-bottom:30px;
+  }
+  .admin-topbar h1{ font-size:26px; }
+  .admin-topbar .back-link{
+    font-size:13px; color: var(--text-dim); text-decoration:none; border:1px solid var(--line);
+    padding:8px 14px; border-radius:8px; cursor:pointer;
+  }
+  .admin-topbar .back-link:hover{ border-color: var(--ember); color: var(--text); }
+
+  .login-box{
+    max-width: 380px; margin: 60px auto 0; background: var(--bg-raised);
+    border:1px solid var(--line); border-radius:14px; padding:32px 28px;
+  }
+  .login-box h2{ font-size:22px; margin-bottom:6px; }
+  .login-box p.sub{ color: var(--text-dim); font-size:13.5px; margin-bottom:22px; }
+  .login-box form{ gap:16px; }
+  .login-box .submit-btn{ width:100%; text-align:center; justify-content:center; }
+  .login-error{ font-size:13px; color: var(--danger); min-height:16px; margin-top:2px; }
+
+  .admin-stats{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap:1px;
+    background: var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    margin-bottom:26px;
+  }
+  .admin-stats .cell{ background: var(--bg-raised); padding:16px 18px; }
+  .admin-stats .cell .num{ font-family:'Rajdhani',sans-serif; font-size:24px; font-weight:700; color:var(--ember-2); }
+  .admin-stats .cell .lbl{ font-size:11.5px; color: var(--steel-light); margin-top:2px; }
+
+  .admin-toolbar{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    margin-bottom:18px;
+  }
+  .admin-toolbar input[type=text]{
+    background: var(--bg-raised); border:1px solid var(--line); color: var(--text);
+    padding: 9px 13px; border-radius:8px; font-size:16px; min-width:220px;
+  }
+  .toolbar-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+  .btn-ghost{
+    background: transparent; border:1px solid var(--line); color: var(--text-dim);
+    font-size:13px; font-weight:600; padding: 9px 14px; border-radius:8px; cursor:pointer;
+    font-family:'Inter',sans-serif; transition: border-color .15s ease, color .15s ease;
+  }
+  .btn-ghost:hover{ border-color: var(--ember); color: var(--text); }
+  .btn-ghost.danger:hover{ border-color: var(--danger); color: var(--danger); }
+  .btn-ghost.small{ padding:6px 11px; font-size:12px; }
+
+  .admin-table-wrap{ border:1px solid var(--line); border-radius:12px; overflow:hidden; overflow-x:auto; }
+  table.admin-table{ width:100%; border-collapse:collapse; min-width:780px; }
+  table.admin-table th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.05em;
+    color: var(--steel-light); background: var(--bg-raised); padding:12px 14px; border-bottom:1px solid var(--line);
+    font-weight:600;
+  }
+  table.admin-table td{
+    padding:12px 14px; font-size:13.5px; border-bottom:1px solid var(--line); background: var(--bg);
+    vertical-align: top;
+  }
+  table.admin-table tr:last-child td{ border-bottom:none; }
+  table.admin-table .muted{ color: var(--text-dim); font-size:12.5px; }
+  .status-select{
+    background: var(--bg-raised); color: var(--text); border:1px solid var(--line);
+    border-radius:6px; padding:5px 8px; font-size:12.5px; font-family:'Inter',sans-serif;
+  }
+  .status-select.st-pending{ color: var(--ember-2); }
+  .status-select.st-confirmed{ color: var(--success); }
+  .status-select.st-checked-in{ color: #6EA8FE; }
+  .row-del{
+    background:none; border:1px solid var(--line); color: var(--danger);
+    font-size:12px; padding:6px 10px; border-radius:6px; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .row-del:hover{ background: rgba(229,72,77,0.1); }
+  .players-cell{ font-size:12px; color: var(--text-dim); line-height:1.6; }
+  .players-cell b{ color: var(--text); font-weight:600; }
+  .mode-badge{ font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--line); color: var(--text-dim); }
+  .mode-badge.cs{ color: #6EA8FE; border-color: rgba(110,168,254,0.35); }
+  .mode-badge.squad{ color: var(--ember-2); border-color: rgba(255,182,39,0.35); }
+  .mode-badge.solo{ color: #B892FF; border-color: rgba(184,146,255,0.35); }
+  .mode-badge.duo{ color: #4CAF7D; border-color: rgba(76,175,125,0.35); }
+
+  .admin-empty{
+    padding: 40px 18px; text-align:center; color: var(--text-dim); font-size:14px;
+    border:1px dashed var(--line); border-radius:12px;
+  }
+
+  .settings-box{
+    margin-top: 30px; background: var(--bg-raised); border:1px solid var(--line);
+    border-radius:12px; padding:22px 24px;
+  }
+  .settings-box h3{ font-size:17px; margin-bottom:16px; }
+  .settings-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:10px 0; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  .settings-row:last-child{ border-bottom:none; }
+  .settings-row .lbl{ font-size:13.5px; color: var(--text-dim); }
+  .settings-row .lbl small{ display:block; font-size:11.5px; color: var(--steel-light); margin-top:2px; }
+
+  .room-settings-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top:6px; }
+  @media (max-width: 620px){ .room-settings-grid{ grid-template-columns: 1fr; } }
+  .room-mode-block{ background: var(--bg); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  .room-mode-block h4{ font-size:14px; margin-bottom:12px; letter-spacing:0.03em; }
+  .room-mode-block h4.cs{ color:#6EA8FE; }
+  .room-mode-block h4.squad{ color: var(--ember-2); }
+  .room-mode-block h4.solo{ color: #B892FF; }
+  .room-mode-block h4.duo{ color: #4CAF7D; }
+  .room-mode-block .field{ margin-bottom:10px; }
+  .room-mode-block .field:last-of-type{ margin-bottom:0; }
+  .room-mode-block .save-row{ margin-top:12px; display:flex; align-items:center; gap:10px; }
+  .save-ok{ font-size:12px; color: var(--success); opacity:0; transition: opacity .2s ease; }
+  .save-ok.show{ opacity:1; }
+
+  /* ---------- Subscribe-confirm modal ---------- */
+  .modal-overlay{
+    display:none;
+    position:fixed; inset:0; z-index:1200;
+    background: rgba(6,4,3,0.72);
+    align-items:center; justify-content:center;
+    padding:20px;
+  }
+  .modal-overlay.show{ display:flex; }
+  .modal-box{
+    background: var(--bg-raised);
+    border:1px solid var(--ember);
+    border-radius:14px;
+    max-width: 420px; width:100%;
+    padding:26px 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal-box h3{ font-size:21px; margin-bottom:8px; }
+  .modal-box p{ color: var(--text-dim); font-size:14px; margin-bottom:18px; }
+  .modal-yt-btn{
+    display:flex; align-items:center; justify-content:center; gap:9px;
+    background: #FF3B30; color:#fff; text-decoration:none;
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:16px;
+    padding:12px 18px; border-radius:9px; margin-bottom:18px;
+    transition: transform .12s ease;
+  }
+  .modal-yt-btn:hover{ transform: translateY(-1px); }
+  .modal-yt-btn svg{ width:22px; height:22px; flex-shrink:0; }
+  .modal-check-row{
+    display:flex; align-items:flex-start; gap:10px; margin-bottom:20px;
+    font-size:13.5px; color: var(--text);
+  }
+  .modal-check-row input[type=checkbox]{
+    width:18px; height:18px; margin-top:1px; accent-color: var(--ember); flex-shrink:0;
+  }
+  .modal-actions{ display:flex; gap:12px; flex-wrap:wrap; }
+  .modal-actions .submit-btn{ align-self:auto; }
+  .modal-cancel-btn{
+    background:transparent; border:1px solid var(--line); color: var(--text-dim);
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:15px;
+    padding:12px 20px; border-radius:8px; cursor:pointer;
+  }
+  .modal-cancel-btn:hover{ border-color: var(--danger); color: var(--danger); }
+  .modal-err{ font-size:12.5px; color: var(--danger); min-height:16px; margin-bottom:4px; }
+
+  /* ---------- Support number ---------- */
+  .support-note{
+    margin-top:14px; font-size:13px; color: var(--text-dim);
+  }
+  .support-note a{ color: var(--ember-2); font-weight:600; text-decoration:none; }
+  .support-note a:hover{ text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div id="publicSite">
+<header class="hero">
+  <div class="hero-clip"></div>
+  <a class="admin-trigger" id="openAdminLink" aria-label="Admin login" href="#">Admin login</a>
+  <div class="wrap">
+    <div class="brand-row">
+      <a class="yt-badge" href="https://youtube.com/@vihaan_espx?si=04AwPwUyIOK2nLon" target="_blank" rel="noopener">
+        <svg class="yt-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="8" width="44" height="32" rx="9" fill="#FF3B30"/>
+          <path d="M20 17.5L32 24L20 30.5V17.5Z" fill="white"/>
+        </svg>
+        <span>Khatri x ESP7<small>@VIHAAN_ESPx</small></span>
+      </a>
+    </div>
+
+    <div class="special-banner">🔥 1K SPECIAL TOURNAMENT</div>
+    <div class="kicker">SQUAD REGISTRATION · FREE FIRE</div>
+    <h1 class="title">Khatri x ESP7<br><em>Free Fire</em> Tournament</h1>
+    <p class="hero-sub">Squad up and register for the community tournament hosted live on the Khatri x ESP7 YouTube channel. Room ID &amp; password are shared here and on the live stream before match start.</p>
+
+    <div class="slot-tracker">
+      <div class="slot-pill">
+        <span class="num" id="slotsFilled">0</span>
+        <span class="lbl">Teams registered</span>
+      </div>
+      <div class="slot-pill">
+        <span class="num" id="slotsLeft">48</span>
+        <span class="lbl">Slots remaining</span>
+      </div>
+      <span class="status-open" id="statusBadge"><span class="dot"></span> Registration open</span>
+    </div>
+
+    <div class="room-banner" id="roomBanner">
+      <h4>Room details</h4>
+      <div class="room-row" id="roomBannerRows"></div>
+    </div>
+  </div>
+</header>
+
+<section id="details">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Tournament details</h2>
+      <p>Everything you need to know before you register.</p>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-cell"><div class="lbl">Game</div><div class="val">Free Fire</div></div>
+      <div class="detail-cell"><div class="lbl">Format</div><div class="val accent">Solo / Duo / Squad / CS</div></div>
+      <div class="detail-cell"><div class="lbl">Prize pool</div><div class="val accent">₹1,000</div></div>
+      <div class="detail-cell"><div class="lbl">Entry fee</div><div class="val">Free</div></div>
+      <div class="detail-cell"><div class="lbl">Total slots</div><div class="val">48 teams</div></div>
+      <div class="detail-cell"><div class="lbl">Match date</div><div class="val">Announced on YouTube live</div></div>
+      <div class="detail-cell"><div class="lbl">Room details</div><div class="val">Shared before match, above &amp; on stream</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="rules">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Rules</h2>
+      <p>Read carefully — registrations that don't follow these may be removed.</p>
+    </div>
+    <ol class="rules">
+      <li><strong>One entry per team.</strong> Duplicate registrations from the same squad will be removed.</li>
+      <li><strong>IGN and UID must match</strong> your in-game profile exactly — mismatches can get your slot cancelled.</li>
+      <li><strong>No hacking, teaming, or emulator abuse.</strong> Fair play is enforced; violators are disqualified without notice.</li>
+      <li><strong>Be online 15 minutes before</strong> the scheduled match time. Room ID/password are announced above and on the live stream.</li>
+      <li><strong>Results and clips</strong> are shown on the Khatri x ESP7 YouTube channel — make sure your WhatsApp number is reachable in case the crew needs to confirm details.</li>
+      <li>Decisions made by the host during the tournament are final.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="register">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Register your squad</h2>
+      <p>Fill in your captain and teammate details below.</p>
+    </div>
+
+    <form id="regForm" novalidate>
+      <fieldset>
+        <legend>Team</legend>
+        <div class="row2">
+          <div class="field">
+            <label for="teamName">Team name</label>
+            <input type="text" id="teamName" placeholder="e.g. Ember Squad" required>
+            <div class="error-msg" data-for="teamName"></div>
+          </div>
+          <div class="field">
+            <label for="modeSelect">Mode</label>
+            <select id="modeSelect" class="mode-select" required>
+              <option value="SOLO">Solo</option>
+              <option value="DUO">Duo</option>
+              <option value="SQUAD" selected>Squad (BR)</option>
+              <option value="CS">Clash Squad (CS)</option>
+            </select>
+            <div class="error-msg" data-for="modeSelect"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Captain</legend>
+        <div class="row2">
+          <div class="field">
+            <label for="capName">Captain name</label>
+            <input type="text" id="capName" placeholder="In-game name" required>
+            <div class="error-msg" data-for="capName"></div>
+          </div>
+          <div class="field">
+            <label for="capUid">Captain Free Fire UID</label>
+            <input type="text" id="capUid" placeholder="e.g. 123456789" required>
+            <div class="error-msg" data-for="capUid"></div>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="capWhatsapp">WhatsApp number</label>
+            <input type="tel" id="capWhatsapp" placeholder="10-digit number" required>
+            <div class="error-msg" data-for="capWhatsapp"></div>
+          </div>
+          <div class="field">
+            <label for="capEmail">Email <span class="opt">(optional)</span></label>
+            <input type="email" id="capEmail" placeholder="you@example.com">
+            <div class="error-msg" data-for="capEmail"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset id="fieldset-p2">
+        <legend>Teammate 2</legend>
+        <div class="row2">
+          <div class="field">
+            <label for="p2Name">Name</label>
+            <input type="text" id="p2Name" placeholder="In-game name" required>
+            <div class="error-msg" data-for="p2Name"></div>
+          </div>
+          <div class="field">
+            <label for="p2Uid">Free Fire UID</label>
+            <input type="text" id="p2Uid" placeholder="e.g. 123456789" required>
+            <div class="error-msg" data-for="p2Uid"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset id="fieldset-p3">
+        <legend>Teammate 3</legend>
+        <div class="row2">
+          <div class="field">
+            <label for="p3Name">Name</label>
+            <input type="text" id="p3Name" placeholder="In-game name" required>
+            <div class="error-msg" data-for="p3Name"></div>
+          </div>
+          <div class="field">
+            <label for="p3Uid">Free Fire UID</label>
+            <input type="text" id="p3Uid" placeholder="e.g. 123456789" required>
+            <div class="error-msg" data-for="p3Uid"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset id="fieldset-p4">
+        <legend id="p4Legend">Teammate 4 <span class="opt" style="font-weight:400; font-size:13px;">(substitute, optional)</span></legend>
+        <div class="row2">
+          <div class="field">
+            <label for="p4Name">Name <span class="opt">(optional)</span></label>
+            <input type="text" id="p4Name" placeholder="In-game name">
+            <div class="error-msg" data-for="p4Name"></div>
+          </div>
+          <div class="field">
+            <label for="p4Uid">Free Fire UID <span class="opt">(optional)</span></label>
+            <input type="text" id="p4Uid" placeholder="e.g. 123456789">
+            <div class="error-msg" data-for="p4Uid"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div>
+        <button type="submit" class="submit-btn" id="submitBtn">Register team</button>
+        <p class="form-note" style="margin-top:10px;">Entries are currently saved on this device. Firebase sync will replace this soon — see the code comments.</p>
+      </div>
+    </form>
+
+    <div class="confirm-card" id="confirmCard">
+      <h3>You're in! 🔥</h3>
+      <div class="rid" id="confirmId"></div>
+      <p id="confirmText"></p>
+    </div>
+
+    <p class="support-note">Need help registering? Customer support: <a href="tel:461430657">461430657</a></p>
+  </div>
+</section>
+
+<div class="modal-overlay" id="subscribeModal">
+  <div class="modal-box">
+    <h3>One last step 🔔</h3>
+    <p>Subscribe to the Khatri x ESP7 YouTube channel to lock in your slot. Registration is only confirmed after you subscribe and check the box below.</p>
+    <a class="modal-yt-btn" id="modalYtLink" href="https://youtube.com/@vihaan_espx?si=04AwPwUyIOK2nLon" target="_blank" rel="noopener">
+      <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="8" width="44" height="32" rx="9" fill="white"/>
+        <path d="M20 17.5L32 24L20 30.5V17.5Z" fill="#FF3B30"/>
+      </svg>
+      Subscribe on YouTube
+    </a>
+    <label class="modal-check-row">
+      <input type="checkbox" id="subscribeCheck">
+      <span>I've subscribed to the Khatri x ESP7 YouTube channel</span>
+    </label>
+    <div class="modal-err" id="subscribeErr"></div>
+    <div class="modal-actions">
+      <button type="button" class="submit-btn" id="confirmSubscribeBtn">Confirm &amp; register</button>
+      <button type="button" class="modal-cancel-btn" id="cancelSubscribeBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<section id="teams">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Registered teams</h2>
+      <p>Team names only — captain contact details stay private.</p>
+    </div>
+    <div id="teamsList"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Khatri x ESP7 Free Fire Tournament · community-run event, not affiliated with Garena.</p>
+    <a class="footer-yt" href="https://youtube.com/@vihaan_espx?si=04AwPwUyIOK2nLon" target="_blank" rel="noopener">
+      <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="8" width="44" height="32" rx="9" fill="#FF3B30"/>
+        <path d="M20 17.5L32 24L20 30.5V17.5Z" fill="white"/>
+      </svg>
+      Watch live on YouTube
+    </a>
+    <p class="support-note" style="margin-top:14px;">Customer support: <a href="tel:461430657">461430657</a></p>
+    <span class="footer-credit">Developed by Lord Plays</span>
+  </div>
+</footer>
+</div>
+<!-- /#publicSite -->
+
+<!-- ============================================================
+     ADMIN PORTAL
+     Gated by a simple ID/password check for now (see ADMIN_ID /
+     ADMIN_PASSWORD in the script below — CHANGE THESE before you
+     publish this page anywhere public). Swap this for Firebase
+     Auth (signInWithEmailAndPassword) later — everything else in
+     the dashboard reads/writes through the same data-layer
+     functions used by the public form, so it keeps working as-is.
+   ============================================================ -->
+<div id="adminPortal">
+  <div class="admin-shell">
+    <div class="admin-wrap">
+
+      <div id="adminLoginView">
+        <div class="login-box">
+          <h2>Admin login</h2>
+          <p class="sub">Khatri x ESP7 — 1K Special Tournament</p>
+          <form id="adminLoginForm">
+            <div class="field">
+              <label for="adminIdInput">Admin ID</label>
+              <input type="text" id="adminIdInput" placeholder="Enter admin ID" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+            </div>
+            <div class="field">
+              <label for="adminPassInput">Password</label>
+              <input type="text" id="adminPassInput" placeholder="Enter password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+            </div>
+            <div class="login-error" id="loginError"></div>
+            <button type="submit" class="submit-btn">Log in</button>
+          </form>
+          <a class="footer-admin" id="closeAdminLink" style="display:block; margin-top:18px; text-align:center;">← Back to registration page</a>
+        </div>
+      </div>
+
+      <div id="adminDashboardView" style="display:none;">
+        <div class="admin-topbar">
+          <h1>Admin dashboard</h1>
+          <div style="display:flex; gap:10px;">
+            <a class="back-link" id="backToSiteLink">← Back to site</a>
+            <a class="back-link" id="logoutLink">Log out</a>
+          </div>
+        </div>
+
+        <div class="admin-stats" id="adminStats"></div>
+
+        <div class="admin-toolbar">
+          <input type="text" id="adminSearch" placeholder="Search by team, captain, UID or WhatsApp...">
+          <div class="toolbar-actions">
+            <button class="btn-ghost" id="exportCsvBtn">Export CSV</button>
+            <button class="btn-ghost danger" id="clearAllBtn">Clear all data</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Team</th>
+                <th>Mode</th>
+                <th>Captain</th>
+                <th>Squad</th>
+                <th>Registered</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="settings-box">
+          <h3>Tournament settings</h3>
+          <div class="settings-row">
+            <div class="lbl">Registration status<small>Manually override — closes/opens the public form</small></div>
+            <button class="btn-ghost" id="toggleRegBtn">Toggle open/closed</button>
+          </div>
+          <div class="settings-row">
+            <div class="lbl">Total slots<small>Currently 48 — edit TOTAL_SLOTS in the code to change</small></div>
+            <span class="muted" id="totalSlotsDisplay">48</span>
+          </div>
+        </div>
+
+        <div class="settings-box">
+          <h3>Room ID &amp; password — Solo / Duo / Squad / CS</h3>
+          <p class="form-note" style="margin-bottom:4px;">Set these once room IDs are ready. Each mode shows live in the "Room details" banner on the public page as soon as its room ID is filled in — leave a mode blank to hide it.</p>
+          <div class="room-settings-grid">
+            <div class="room-mode-block">
+              <h4 class="solo">Solo</h4>
+              <div class="field">
+                <label for="soloRoomId">Room ID</label>
+                <input type="text" id="soloRoomId" placeholder="e.g. 123456789">
+              </div>
+              <div class="field">
+                <label for="soloRoomPass">Password</label>
+                <input type="text" id="soloRoomPass" placeholder="e.g. esp7">
+              </div>
+              <div class="save-row">
+                <button class="btn-ghost small" data-save-mode="SOLO">Save Solo room</button>
+                <span class="save-ok" id="soloSaveOk">Saved ✓</span>
+              </div>
+            </div>
+            <div class="room-mode-block">
+              <h4 class="duo">Duo</h4>
+              <div class="field">
+                <label for="duoRoomId">Room ID</label>
+                <input type="text" id="duoRoomId" placeholder="e.g. 123456789">
+              </div>
+              <div class="field">
+                <label for="duoRoomPass">Password</label>
+                <input type="text" id="duoRoomPass" placeholder="e.g. esp7">
+              </div>
+              <div class="save-row">
+                <button class="btn-ghost small" data-save-mode="DUO">Save Duo room</button>
+                <span class="save-ok" id="duoSaveOk">Saved ✓</span>
+              </div>
+            </div>
+            <div class="room-mode-block">
+              <h4 class="squad">Squad (BR)</h4>
+              <div class="field">
+                <label for="squadRoomId">Room ID</label>
+                <input type="text" id="squadRoomId" placeholder="e.g. 123456789">
+              </div>
+              <div class="field">
+                <label for="squadRoomPass">Password</label>
+                <input type="text" id="squadRoomPass" placeholder="e.g. esp7">
+              </div>
+              <div class="save-row">
+                <button class="btn-ghost small" data-save-mode="SQUAD">Save Squad room</button>
+                <span class="save-ok" id="squadSaveOk">Saved ✓</span>
+              </div>
+            </div>
+            <div class="room-mode-block">
+              <h4 class="cs">Clash Squad (CS)</h4>
+              <div class="field">
+                <label for="csRoomId">Room ID</label>
+                <input type="text" id="csRoomId" placeholder="e.g. 987654321">
+              </div>
+              <div class="field">
+                <label for="csRoomPass">Password</label>
+                <input type="text" id="csRoomPass" placeholder="e.g. esp7">
+              </div>
+              <div class="save-row">
+                <button class="btn-ghost small" data-save-mode="CS">Save CS room</button>
+                <span class="save-ok" id="csSaveOk">Saved ✓</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ============================================================
+   FIREBASE SETUP
+   Paste YOUR project's config below (Firebase console → Project
+   settings → General → Your apps → SDK setup and configuration).
+   Also make sure Firestore is enabled (Build → Firestore Database
+   → Create database), and that its security rules allow the
+   reads/writes this page needs (see note near the bottom of this
+   comment block).
+   ============================================================ */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, setDoc, updateDoc, deleteDoc,
+  onSnapshot, query, orderBy
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBIr6Y2y6prLKgd7P857yCnY60eUhIOd8o",
+  authDomain: "kxl-9cd03.firebaseapp.com",
+  projectId: "kxl-9cd03",
+  storageBucket: "kxl-9cd03.firebasestorage.app",
+  messagingSenderId: "617940943718",
+  appId: "1:617940943718:web:9a3f2aa243e544ab12bea7",
+  measurementId: "G-6FCS278QPV"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+
+/* Firestore security rules (Firestore → Rules) — since this is a
+   public registration form with no login for regular users, and
+   the admin portal only gates the UI (not the database), allow
+   open read/write on these two paths for now:
+
+     rules_version = '2';
+     service cloud.firestore {
+       match /databases/{database}/documents {
+         match /ff_tournament_registrations_vihaan_espx/{id} { allow read, write: if true; }
+         match /ff_tournament_settings_vihaan_espx/{id} { allow read, write: if true; }
+       }
+     }
+
+   This is fine to get things working, but anyone who finds your
+   Firebase config could write to these collections directly. For
+   real production use, tighten these rules (e.g. Firebase Auth
+   for the admin, or App Check) once you're ready. */
+
+const REGISTRATIONS_COL = "ff_tournament_registrations_vihaan_espx";
+const SETTINGS_DOC_PATH = ["ff_tournament_settings_vihaan_espx", "main"];
+const TOTAL_SLOTS = 48;
+
+/* ---- CHANGE THESE before publishing ---- */
+const ADMIN_ID = "espx_admin";
+const ADMIN_PASSWORD = "khatri1k";
+
+/* sessionStorage is only used for the admin login flag on THIS device —
+   that stays local on purpose (Firebase is for the shared tournament
+   data: registrations, room info, open/closed status). Some browsers
+   (opening the file directly with file://, or viewing it inside an
+   in-app browser like WhatsApp/Telegram/Instagram) block sessionStorage
+   and throw instead of just returning null. If that throw isn't caught,
+   it stops the ENTIRE script from running — including the code further
+   down that wires up the admin login button. These wrappers catch that
+   and fall back to an in-memory store instead. */
+const memorySession = {};
+function safeSessionGet(key) {
+  try { return sessionStorage.getItem(key); } catch (e) { return memorySession[key] !== undefined ? memorySession[key] : null; }
+}
+function safeSessionSet(key, val) {
+  try { sessionStorage.setItem(key, val); } catch (e) { memorySession[key] = val; }
+}
+function safeSessionRemove(key) {
+  try { sessionStorage.removeItem(key); } catch (e) { delete memorySession[key]; }
+}
+
+const EMPTY_ROOM_SETTINGS = { SOLO: {id:"", pass:""}, DUO: {id:"", pass:""}, SQUAD: {id:"", pass:""}, CS: {id:"", pass:""} };
+
+/* Local, live-synced mirror of Firestore. onSnapshot below keeps these
+   arrays/objects fresh (including instantly, from this tab's own writes,
+   thanks to Firestore's local cache) — everything else in this file
+   keeps reading them the exact same synchronous way it read localStorage
+   before, so almost nothing else in the app had to change. */
+let registrationsCache = [];
+let settingsCache = { closed: false, rooms: JSON.parse(JSON.stringify(EMPTY_ROOM_SETTINGS)) };
+
+const settingsDocRef = doc(db, SETTINGS_DOC_PATH[0], SETTINGS_DOC_PATH[1]);
+
+onSnapshot(
+  query(collection(db, REGISTRATIONS_COL), orderBy("createdAt")),
+  (snap) => {
+    registrationsCache = snap.docs.map(d => d.data());
+    try { renderTeams(); } catch (e) {}
+    try { if (isAdminLoggedIn() && adminPortal.classList.contains("show")) renderAdminDashboard(); } catch (e) {}
+  },
+  (err) => console.error("Registrations listener failed:", err)
+);
+
+onSnapshot(
+  settingsDocRef,
+  (snap) => {
+    const data = snap.exists() ? snap.data() : {};
+    settingsCache.closed = !!data.closed;
+    settingsCache.rooms = Object.assign({}, EMPTY_ROOM_SETTINGS, data.rooms || {});
+    try { renderTeams(); } catch (e) {}
+    try { if (isAdminLoggedIn() && adminPortal.classList.contains("show")) renderAdminDashboard(); } catch (e) {}
+  },
+  (err) => console.error("Settings listener failed:", err)
+);
+
+function loadRegistrations() {
+  return registrationsCache;
+}
+
+function saveRegistration(entry) {
+  entry.id = "FF-" + Date.now().toString(36).toUpperCase();
+  entry.createdAt = new Date().toISOString();
+  entry.status = "pending";
+  setDoc(doc(db, REGISTRATIONS_COL, entry.id), entry).catch(err => {
+    console.error("saveRegistration failed:", err);
+    alert("Could not save your registration — check your internet connection and try again.");
+  });
+  return entry.id;
+}
+
+function updateRegistrationStatus(id, status) {
+  updateDoc(doc(db, REGISTRATIONS_COL, id), { status }).catch(err =>
+    console.error("updateRegistrationStatus failed:", err)
+  );
+}
+
+function deleteRegistration(id) {
+  deleteDoc(doc(db, REGISTRATIONS_COL, id)).catch(err =>
+    console.error("deleteRegistration failed:", err)
+  );
+}
+
+function clearAllRegistrations() {
+  loadRegistrations().forEach(t => {
+    deleteDoc(doc(db, REGISTRATIONS_COL, t.id)).catch(err =>
+      console.error("clearAllRegistrations failed:", err)
+    );
+  });
+}
+
+function isManuallyClosed() {
+  return settingsCache.closed;
+}
+
+function setManuallyClosed(val) {
+  settingsCache.closed = val;
+  setDoc(settingsDocRef, { closed: val }, { merge: true }).catch(err =>
+    console.error("setManuallyClosed failed:", err)
+  );
+}
+
+function loadRoomSettings() {
+  return settingsCache.rooms;
+}
+
+function saveRoomSettings(mode, id, pass) {
+  settingsCache.rooms[mode] = { id: id, pass: pass };
+  setDoc(settingsDocRef, { rooms: settingsCache.rooms }, { merge: true }).catch(err =>
+    console.error("saveRoomSettings failed:", err)
+  );
+}
+
+/* ============================================================
+   ADMIN PORTAL LOGIC
+   ============================================================ */
+
+const publicSite = document.getElementById("publicSite");
+const adminPortal = document.getElementById("adminPortal");
+const adminLoginView = document.getElementById("adminLoginView");
+const adminDashboardView = document.getElementById("adminDashboardView");
+const adminLoginForm = document.getElementById("adminLoginForm");
+const adminIdInput = document.getElementById("adminIdInput");
+const adminPassInput = document.getElementById("adminPassInput");
+const loginError = document.getElementById("loginError");
+
+const ADMIN_SESSION_KEY = "ff_tournament_admin_session_vihaan_espx";
+
+function isAdminLoggedIn() {
+  return safeSessionGet(ADMIN_SESSION_KEY) === "true";
+}
+
+function openAdmin() {
+  publicSite.style.display = "none";
+  adminPortal.classList.add("show");
+  if (isAdminLoggedIn()) {
+    showAdminDashboard();
+  } else {
+    showAdminLogin();
+  }
+}
+
+function closeAdmin() {
+  adminPortal.classList.remove("show");
+  publicSite.style.display = "";
+  renderTeams();
+}
+
+function showAdminLogin() {
+  adminLoginView.style.display = "";
+  adminDashboardView.style.display = "none";
+  loginError.textContent = "";
+  adminIdInput.value = "";
+  adminPassInput.value = "";
+}
+
+function showAdminDashboard() {
+  adminLoginView.style.display = "none";
+  adminDashboardView.style.display = "";
+  renderAdminDashboard();
+}
+
+document.getElementById("openAdminLink").addEventListener("click", function (e) {
+  e.preventDefault();
+  openAdmin();
+});
+
+document.getElementById("closeAdminLink").addEventListener("click", function (e) {
+  e.preventDefault();
+  closeAdmin();
+});
+
+document.getElementById("backToSiteLink").addEventListener("click", function (e) {
+  e.preventDefault();
+  closeAdmin();
+});
+
+document.getElementById("logoutLink").addEventListener("click", function (e) {
+  e.preventDefault();
+  safeSessionRemove(ADMIN_SESSION_KEY);
+  showAdminLogin();
+});
+
+adminLoginForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  const id = adminIdInput.value.trim().toLowerCase();
+  const pass = adminPassInput.value;
+  if (id === ADMIN_ID.toLowerCase() && pass === ADMIN_PASSWORD) {
+    safeSessionSet(ADMIN_SESSION_KEY, "true");
+    showAdminDashboard();
+  } else {
+    loginError.textContent = "Incorrect admin ID or password.";
+  }
+});
+
+/* ---- Dashboard rendering ---- */
+
+const adminStatsEl = document.getElementById("adminStats");
+const adminTableBody = document.getElementById("adminTableBody");
+const adminSearchInput = document.getElementById("adminSearch");
+const toggleRegBtn = document.getElementById("toggleRegBtn");
+const exportCsvBtn = document.getElementById("exportCsvBtn");
+const clearAllBtn = document.getElementById("clearAllBtn");
+
+let adminSearchTerm = "";
+
+function renderAdminStats() {
+  const all = loadRegistrations();
+  const soloCount = all.filter(t => t.mode === "SOLO").length;
+  const duoCount = all.filter(t => t.mode === "DUO").length;
+  const squadCount = all.filter(t => (t.mode || "SQUAD") === "SQUAD").length;
+  const csCount = all.filter(t => t.mode === "CS").length;
+  const confirmedCount = all.filter(t => t.status === "confirmed").length;
+  const checkedInCount = all.filter(t => t.status === "checked-in").length;
+
+  adminStatsEl.innerHTML = `
+    <div class="cell"><div class="num">${all.length}</div><div class="lbl">Total entries</div></div>
+    <div class="cell"><div class="num">${TOTAL_SLOTS - all.length}</div><div class="lbl">Slots left</div></div>
+    <div class="cell"><div class="num">${soloCount}</div><div class="lbl">Solo</div></div>
+    <div class="cell"><div class="num">${duoCount}</div><div class="lbl">Duo</div></div>
+    <div class="cell"><div class="num">${squadCount}</div><div class="lbl">Squad</div></div>
+    <div class="cell"><div class="num">${csCount}</div><div class="lbl">Clash Squad</div></div>
+    <div class="cell"><div class="num">${confirmedCount}</div><div class="lbl">Confirmed</div></div>
+    <div class="cell"><div class="num">${checkedInCount}</div><div class="lbl">Checked in</div></div>
+  `;
+}
+
+function matchesSearch(t, term) {
+  if (!term) return true;
+  const hay = [
+    t.teamName, t.mode,
+    t.captain && t.captain.name, t.captain && t.captain.uid, t.captain && t.captain.whatsapp,
+    t.teammate2 && t.teammate2.name, t.teammate2 && t.teammate2.uid,
+    t.teammate3 && t.teammate3.name, t.teammate3 && t.teammate3.uid,
+    t.teammate4 && t.teammate4.name, t.teammate4 && t.teammate4.uid
+  ].filter(Boolean).join(" ").toLowerCase();
+  return hay.includes(term.toLowerCase());
+}
+
+function renderAdminTable() {
+  const all = loadRegistrations().filter(t => matchesSearch(t, adminSearchTerm));
+
+  if (all.length === 0) {
+    adminTableBody.innerHTML = `<tr><td colspan="8"><div class="admin-empty">No registrations match.</div></td></tr>`;
+    return;
+  }
+
+  adminTableBody.innerHTML = all.map((t, i) => {
+    const mode = t.mode || "SQUAD";
+    const time = new Date(t.createdAt).toLocaleString();
+    const squad = [t.teammate2, t.teammate3, t.teammate4]
+      .filter(p => p && p.name)
+      .map(p => `${escapeHtml(p.name)} <span class="muted">(${escapeHtml(p.uid || "—")})</span>`)
+      .join("<br>");
+    const status = t.status || "pending";
+
+    return `<tr>
+      <td>${i + 1}</td>
+      <td><b>${escapeHtml(t.teamName)}</b><div class="muted">${escapeHtml(t.id)}</div></td>
+      <td><span class="mode-badge ${mode.toLowerCase()}">${MODE_LABELS[mode] || mode}</span></td>
+      <td class="players-cell">
+        <b>${escapeHtml(t.captain.name)}</b> (${escapeHtml(t.captain.uid)})<br>
+        <span class="muted">${escapeHtml(t.captain.whatsapp)}</span>${t.captain.email ? `<br><span class="muted">${escapeHtml(t.captain.email)}</span>` : ""}
+      </td>
+      <td class="players-cell">${squad || '<span class="muted">—</span>'}</td>
+      <td class="muted">${time}</td>
+      <td>
+        <select class="status-select st-${status}" data-id="${t.id}">
+          <option value="pending" ${status === "pending" ? "selected" : ""}>Pending</option>
+          <option value="confirmed" ${status === "confirmed" ? "selected" : ""}>Confirmed</option>
+          <option value="checked-in" ${status === "checked-in" ? "selected" : ""}>Checked in</option>
+        </select>
+      </td>
+      <td><button class="row-del" data-id="${t.id}">Remove</button></td>
+    </tr>`;
+  }).join("");
+
+  adminTableBody.querySelectorAll(".status-select").forEach(sel => {
+    sel.addEventListener("change", function () {
+      updateRegistrationStatus(this.dataset.id, this.value);
+      this.className = "status-select st-" + this.value;
+    });
+  });
+
+  adminTableBody.querySelectorAll(".row-del").forEach(btn => {
+    btn.addEventListener("click", function () {
+      if (confirm("Remove this team's registration? This can't be undone.")) {
+        deleteRegistration(this.dataset.id);
+        renderAdminDashboard();
+      }
+    });
+  });
+}
+
+function renderRegToggleBtn() {
+  toggleRegBtn.textContent = isManuallyClosed() ? "Reopen registration" : "Close registration";
+}
+
+function renderRoomSettingsForm() {
+  const rooms = loadRoomSettings();
+  document.getElementById("soloRoomId").value = rooms.SOLO.id || "";
+  document.getElementById("soloRoomPass").value = rooms.SOLO.pass || "";
+  document.getElementById("duoRoomId").value = rooms.DUO.id || "";
+  document.getElementById("duoRoomPass").value = rooms.DUO.pass || "";
+  document.getElementById("squadRoomId").value = rooms.SQUAD.id || "";
+  document.getElementById("squadRoomPass").value = rooms.SQUAD.pass || "";
+  document.getElementById("csRoomId").value = rooms.CS.id || "";
+  document.getElementById("csRoomPass").value = rooms.CS.pass || "";
+}
+
+function renderAdminDashboard() {
+  renderAdminStats();
+  renderAdminTable();
+  renderRegToggleBtn();
+  renderRoomSettingsForm();
+}
+
+adminSearchInput.addEventListener("input", function () {
+  adminSearchTerm = this.value.trim();
+  renderAdminTable();
+});
+
+toggleRegBtn.addEventListener("click", function () {
+  setManuallyClosed(!isManuallyClosed());
+  renderRegToggleBtn();
+});
+
+clearAllBtn.addEventListener("click", function () {
+  if (confirm("Clear ALL registrations? This cannot be undone.")) {
+    clearAllRegistrations();
+    renderAdminDashboard();
+  }
+});
+
+exportCsvBtn.addEventListener("click", function () {
+  const all = loadRegistrations();
+  if (all.length === 0) { alert("No registrations to export."); return; }
+
+  const header = ["ID","Team","Mode","Status","Registered At","Captain Name","Captain UID","Captain WhatsApp","Captain Email","P2 Name","P2 UID","P3 Name","P3 UID","P4 Name","P4 UID"];
+  const rows = all.map(t => [
+    t.id, t.teamName, t.mode || "BR", t.status || "pending", t.createdAt,
+    t.captain.name, t.captain.uid, t.captain.whatsapp, t.captain.email || "",
+    t.teammate2.name, t.teammate2.uid,
+    t.teammate3.name, t.teammate3.uid,
+    (t.teammate4 && t.teammate4.name) || "", (t.teammate4 && t.teammate4.uid) || ""
+  ]);
+
+  const csv = [header, ...rows]
+    .map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
+    .join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "khatri_esp7_registrations.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+const ROOM_INPUT_IDS = {
+  SOLO:  { id: "soloRoomId",  pass: "soloRoomPass",  ok: "soloSaveOk" },
+  DUO:   { id: "duoRoomId",   pass: "duoRoomPass",   ok: "duoSaveOk" },
+  SQUAD: { id: "squadRoomId", pass: "squadRoomPass", ok: "squadSaveOk" },
+  CS:    { id: "csRoomId",    pass: "csRoomPass",    ok: "csSaveOk" }
+};
+
+document.querySelectorAll("[data-save-mode]").forEach(btn => {
+  btn.addEventListener("click", function () {
+    const mode = this.dataset.saveMode;
+    const ids = ROOM_INPUT_IDS[mode];
+    const idInput = document.getElementById(ids.id);
+    const passInput = document.getElementById(ids.pass);
+    saveRoomSettings(mode, idInput.value.trim(), passInput.value.trim());
+    renderRoomBanner();
+    const okEl = document.getElementById(ids.ok);
+    okEl.classList.add("show");
+    setTimeout(() => okEl.classList.remove("show"), 1800);
+  });
+});
+/* ============================================================
+   PUBLIC SITE LOGIC
+   ============================================================ */
+
+const form = document.getElementById("regForm");
+const submitBtn = document.getElementById("submitBtn");
+const confirmCard = document.getElementById("confirmCard");
+const confirmId = document.getElementById("confirmId");
+const confirmText = document.getElementById("confirmText");
+const slotsFilled = document.getElementById("slotsFilled");
+const slotsLeft = document.getElementById("slotsLeft");
+const statusBadge = document.getElementById("statusBadge");
+const teamsList = document.getElementById("teamsList");
+const roomBanner = document.getElementById("roomBanner");
+const roomBannerRows = document.getElementById("roomBannerRows");
+
+const modeSelect = document.getElementById("modeSelect");
+const fieldsetP2 = document.getElementById("fieldset-p2");
+const fieldsetP3 = document.getElementById("fieldset-p3");
+const fieldsetP4 = document.getElementById("fieldset-p4");
+const p4Legend = document.getElementById("p4Legend");
+
+const BASE_REQUIRED_FIELDS = ["teamName", "capName", "capUid", "capWhatsapp"];
+
+/* Which teammate fieldsets are required/shown per mode:
+   SOLO  -> captain only
+   DUO   -> captain + teammate 2 (required)
+   SQUAD -> captain + teammate 2 + 3 (required), teammate 4 optional substitute
+   CS    -> same as squad (Clash Squad is also played 4-a-side) */
+function getRequiredFieldsForMode(mode) {
+  if (mode === "SOLO") return [...BASE_REQUIRED_FIELDS];
+  if (mode === "DUO") return [...BASE_REQUIRED_FIELDS, "p2Name", "p2Uid"];
+  return [...BASE_REQUIRED_FIELDS, "p2Name", "p2Uid", "p3Name", "p3Uid"];
+}
+
+function updateModeFields() {
+  const mode = modeSelect.value;
+  fieldsetP2.style.display = (mode === "SOLO") ? "none" : "";
+  fieldsetP3.style.display = (mode === "SOLO" || mode === "DUO") ? "none" : "";
+  fieldsetP4.style.display = (mode === "SOLO" || mode === "DUO") ? "none" : "";
+  if (mode === "CS") {
+    p4Legend.innerHTML = 'Teammate 4 <span class="opt" style="font-weight:400; font-size:13px;">(substitute, optional)</span>';
+  }
+}
+
+modeSelect.addEventListener("change", updateModeFields);
+try { updateModeFields(); } catch (e) { console.error("updateModeFields failed:", e); }
+
+function clearErrors() {
+  document.querySelectorAll(".error-msg").forEach(el => el.textContent = "");
+  document.querySelectorAll("input").forEach(el => el.classList.remove("err"));
+}
+
+function showError(fieldId, msg) {
+  const el = document.querySelector(`.error-msg[data-for="${fieldId}"]`);
+  const input = document.getElementById(fieldId);
+  if (el) el.textContent = msg;
+  if (input) input.classList.add("err");
+}
+
+function validate() {
+  clearErrors();
+  let valid = true;
+  const requiredFields = getRequiredFieldsForMode(modeSelect.value);
+
+  requiredFields.forEach(id => {
+    const val = document.getElementById(id).value.trim();
+    if (!val) {
+      showError(id, "Required");
+      valid = false;
+    }
+  });
+
+  const whatsapp = document.getElementById("capWhatsapp").value.trim();
+  if (whatsapp && !/^\d{10}$/.test(whatsapp.replace(/\D/g, ""))) {
+    showError("capWhatsapp", "Enter a valid 10-digit number");
+    valid = false;
+  }
+
+  const email = document.getElementById("capEmail").value.trim();
+  if (email && !/^\S+@\S+\.\S+$/.test(email)) {
+    showError("capEmail", "Enter a valid email");
+    valid = false;
+  }
+
+  return valid;
+}
+
+const MODE_LABELS = { SOLO: "Solo", DUO: "Duo", SQUAD: "Squad", CS: "Clash Squad" };
+
+function renderRoomBanner() {
+  const rooms = loadRoomSettings();
+  const activeModes = ["SOLO", "DUO", "SQUAD", "CS"].filter(m => rooms[m] && rooms[m].id);
+
+  if (activeModes.length === 0) {
+    roomBanner.classList.remove("show");
+    roomBannerRows.innerHTML = "";
+    return;
+  }
+
+  roomBannerRows.innerHTML = activeModes.map(m => `
+    <div class="room-item">
+      <div class="k">${MODE_LABELS[m]} — Room ID</div>
+      <div class="v">${escapeHtml(rooms[m].id)}</div>
+    </div>
+    <div class="room-item">
+      <div class="k">${MODE_LABELS[m]} — Password</div>
+      <div class="v">${rooms[m].pass ? escapeHtml(rooms[m].pass) : "—"}</div>
+    </div>
+  `).join("");
+  roomBanner.classList.add("show");
+}
+
+function renderTeams() {
+  const all = loadRegistrations();
+
+  slotsFilled.textContent = all.length;
+  const left = Math.max(TOTAL_SLOTS - all.length, 0);
+  slotsLeft.textContent = left;
+
+  if (isManuallyClosed()) {
+    statusBadge.className = "status-closed";
+    statusBadge.innerHTML = '<span class="dot"></span> Registration closed';
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Registration closed";
+  } else if (left === 0) {
+    statusBadge.className = "status-closed";
+    statusBadge.innerHTML = '<span class="dot"></span> Slots full';
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Registration full";
+  } else {
+    statusBadge.className = "status-open";
+    statusBadge.innerHTML = '<span class="dot"></span> Registration open';
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Register team";
+  }
+
+  if (all.length === 0) {
+    teamsList.innerHTML = '<div class="empty-state">No teams registered yet — be the first to lock in your slot.</div>';
+  } else {
+    teamsList.innerHTML = '<div class="teams-list">' +
+      all.map((t, i) => {
+        const time = new Date(t.createdAt).toLocaleString();
+        const mode = t.mode || "SQUAD";
+        return `<div class="team-row">
+          <span class="idx">${String(i + 1).padStart(2, "0")}</span>
+          <span class="mode-tag">${MODE_LABELS[mode] || mode}</span>
+          <span class="name">${escapeHtml(t.teamName)}</span>
+          <span class="time">${time}</span>
+        </div>`;
+      }).join("") +
+      '</div>';
+  }
+
+  renderRoomBanner();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str == null ? "" : str;
+  return div.innerHTML;
+}
+
+/* ---------- Subscribe-confirm modal wiring ----------
+   Flow: user fills the form and hits "Register team" -> fields are
+   validated first -> only if valid, the YouTube subscribe modal
+   opens -> registration is only actually saved once the user has
+   opened the subscribe link's checkbox and clicked "Confirm &
+   register" inside the modal. */
+const subscribeModal = document.getElementById("subscribeModal");
+const subscribeCheck = document.getElementById("subscribeCheck");
+const subscribeErr = document.getElementById("subscribeErr");
+const confirmSubscribeBtn = document.getElementById("confirmSubscribeBtn");
+const cancelSubscribeBtn = document.getElementById("cancelSubscribeBtn");
+
+function openSubscribeModal() {
+  subscribeCheck.checked = false;
+  subscribeErr.textContent = "";
+  subscribeModal.classList.add("show");
+}
+
+function closeSubscribeModal() {
+  subscribeModal.classList.remove("show");
+}
+
+function finalizeRegistration() {
+  const mode = modeSelect.value;
+  const entry = {
+    teamName: document.getElementById("teamName").value.trim(),
+    mode: mode,
+    captain: {
+      name: document.getElementById("capName").value.trim(),
+      uid: document.getElementById("capUid").value.trim(),
+      whatsapp: document.getElementById("capWhatsapp").value.trim(),
+      email: document.getElementById("capEmail").value.trim()
+    },
+    teammate2: (mode === "SOLO") ? { name: "", uid: "" } : {
+      name: document.getElementById("p2Name").value.trim(),
+      uid: document.getElementById("p2Uid").value.trim()
+    },
+    teammate3: (mode === "SOLO" || mode === "DUO") ? { name: "", uid: "" } : {
+      name: document.getElementById("p3Name").value.trim(),
+      uid: document.getElementById("p3Uid").value.trim()
+    },
+    teammate4: (mode === "SOLO" || mode === "DUO") ? { name: "", uid: "" } : {
+      name: document.getElementById("p4Name").value.trim(),
+      uid: document.getElementById("p4Uid").value.trim()
+    }
+  };
+
+  const id = saveRegistration(entry);
+
+  confirmId.textContent = "Registration ID: " + id;
+  confirmText.textContent = `${entry.teamName} is registered for ${MODE_LABELS[entry.mode] || entry.mode}. Watch the Khatri x ESP7 YouTube channel and the room banner above for room ID, password, and match updates.`;
+  confirmCard.classList.add("show");
+  confirmCard.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  form.reset();
+  updateModeFields();
+  renderTeams();
+}
+
+try {
+  confirmSubscribeBtn.addEventListener("click", function () {
+    if (!subscribeCheck.checked) {
+      subscribeErr.textContent = "Please subscribe and check the box to confirm.";
+      return;
+    }
+    closeSubscribeModal();
+    finalizeRegistration();
+  });
+
+  cancelSubscribeBtn.addEventListener("click", function () {
+    closeSubscribeModal();
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const all = loadRegistrations();
+    if (all.length >= TOTAL_SLOTS || isManuallyClosed()) {
+      return;
+    }
+
+    if (!validate()) {
+      const firstErr = document.querySelector(".error-msg:not(:empty)");
+      if (firstErr) firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    openSubscribeModal();
+  });
+} catch (e) {
+  console.error("Subscribe-modal wiring failed:", e);
+}
+
+try { renderTeams(); } catch (e) { console.error("renderTeams failed:", e); }
+
+</script>
+
+</body>
+</html>
